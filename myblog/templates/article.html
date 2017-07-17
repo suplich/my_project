@@ -26,7 +26,7 @@
         Address:  <a href="{{ SITE_URL }}article/?id={{ article.id }}" rel="bookmark" title="{{ article.title }}">{{ SITE_URL }}article/?id={{ article.id }}</a>
         </div>
 
-      <div class="commentstitle"><h3 id="comments"><span class="commentsnumber">only 1 comment</span> untill now</h3></div>
+      <!-- <div class="commentstitle"><h3 id="comments"><span class="commentsnumber">only 1 comment</span> untill now</h3></div> -->
 
       <ol class="commentlist">
           {% for comment in comment_list %}
@@ -45,7 +45,7 @@
                   <div><img alt="" src="{% static 'images/default.jpg' %}" class="avatar avatar-32 photo" height="32" width="32"></div>
 
                   <div class="body">
-                                        {{ children_comment.content }}                  </div>
+              {{ children_comment.content }} </div>
                 </div>
           </li>
           {% endfor %}

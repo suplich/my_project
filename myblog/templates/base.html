@@ -24,8 +24,11 @@
   </div>
   <nav id="topnav" class="f_r">
     <ul>
-	{% for category in category_list %}
-      <a href="base.html" target="_blank">{{category}}</a>
+	 <a href="/" >首页</a>
+     {% for category in category_list %}
+      <!-- <a href="category.html" target="bookmark">{{category}}</a> -->
+	  <a href="{% url 'category' %}?cid={{ category.id }}" >{{category}}</a>
+            
     {% endfor %}
     </ul>
     <script src="{% static 'js/nav.js' %}"></script>
@@ -40,9 +43,8 @@
       <h3>关注我</h3>
       <div class="gzwm">
         <ul>
-          <li><a class="xlwb" href="#" target="_blank">新浪微博</a></li>
-          <li><a class="txwb" href="#" target="_blank">腾讯微博</a></li>
-          <li><a class="rss" href="portal.php?mod=rss" target="_blank">RSS</a></li>
+          <li><a class="xlwb" href="http://weibo.com/u/1669359950" target="_blank">新浪微博</a></li>
+          <li><a class="txwb" href="#" target="_blank">GITHUB</a></li>
           <li><a class="wx" href="mailto:admin@admin.com">邮箱</a></li>
         </ul>
       </div>
@@ -72,18 +74,15 @@ window.onload = function ()
         <ul class="hd" id="tab">
           <li class="cur"><a href="/">浏览排行</a></li>
           <li><a href="/">评论排行</a></li>
-          <li><a href="/">站长推荐</a></li>
         </ul>
       </div>
+	  
       <div class="ms-main" id="ms-main">
         <div style="display: block;" class="bd bd-news" >
           <ul>
-            <li><a href="/" target="_blank">住在手机里的朋友</a></li>
-            <li><a href="/" target="_blank">教你怎样用欠费手机拨打电话</a></li>
-            <li><a href="/" target="_blank">原来以为，一个人的勇敢是，删掉他的手机号码...</a></li>
-            <li><a href="/" target="_blank">手机的16个惊人小秘密，据说99.999%的人都不知</a></li>
-            <li><a href="/" target="_blank">你面对的是生活而不是手机</a></li>
-            <li><a href="/" target="_blank">豪雅手机正式发布! 在法国全手工打造的奢侈品</a></li>
+		  {% for article in click_count_paixu %}
+            <li><a href="{% url 'article' %}?id={{ article.id }}" target="_blank">{{article.title}}</a></li>
+          {% endfor %}
           </ul>
         </div>
         <div  class="bd bd-news">
@@ -91,16 +90,6 @@ window.onload = function ()
             {% for article in article_comment_list %}
             <li><a href="/" target="_blank">{{ article.title | slice:':15' }}</a></li>
             {% endfor %}
-          </ul>
-        </div>
-        <div class="bd bd-news">
-          <ul>
-            <li><a href="/" target="_blank">手机的16个惊人小秘密，据说99.999%的人都不知</a></li>
-            <li><a href="/" target="_blank">你面对的是生活而不是手机</a></li>
-            <li><a href="/" target="_blank">住在手机里的朋友</a></li>
-            <li><a href="/" target="_blank">豪雅手机正式发布! 在法国全手工打造的奢侈品</a></li>
-            <li><a href="/" target="_blank">教你怎样用欠费手机拨打电话</a></li>
-            <li><a href="/" target="_blank">原来以为，一个人的勇敢是，删掉他的手机号码...</a></li>
           </ul>
         </div>
       </div>
@@ -111,32 +100,27 @@ window.onload = function ()
     <div class="cloud">
       <h3>标签云</h3>
       <ul>
-        <li><a href="/">个人博客</a></li>
-        <li><a href="/">web开发</a></li>
-        <li><a href="/">前端设计</a></li>
-        <li><a href="/">Html</a></li>
-        <li><a href="/">CSS3</a></li>
-        <li><a href="/">Html5+css3</a></li>
-        <li><a href="/">百度</a></li>
-        <li><a href="/">Javasript</a></li>
-        <li><a href="/">web开发</a></li>
-        <li><a href="/">前端设计</a></li>
-        <li><a href="/">Html</a></li>
-        <li><a href="/">CSS3</a></li>
-        <li><a href="/">Html5+css3</a></li>
-        <li><a href="/">百度</a></li>
-      </ul>
+	  {% for tag in tag_list %}
+        <li><a href="{% url 'cloude' %}?tid={{ tag.id }}">{{ tag.name }}</a></li>
+      {% endfor %}
+	  </ul>
     </div>
+	
+	
+	
     <div class="tuwen">
       <h3>文章归档</h3>
       <ul>
         {% for archive in archive_list %}
         <li>
           <p>
-		  <span class="tutime font-size-18">
-		  <a href='/'>{{ archive }}</a>
-		  </span>
-		  </p>
+  <span class="tutime font-size-18">
+  <a href="{% url 'archive' %}?year={{ archive | slice:":4" }}&month={{ archive | slice:"5:7" }}">{{ archive }}
+  </a>
+  </span>
+  </p>
+  </span>
+  </p>
        </li>
         {% endfor %}
       </ul>
@@ -144,19 +128,15 @@ window.onload = function ()
     <div class="links">
       <h3>友情链接</h3>
       <ul>
-        <li><a href="/">web开发</a></li>
-        <li><a href="/">前端设计</a></li>
-        <li><a href="/">Html</a></li>
-        <li><a href="/">CSS3</a></li>
-        <li><a href="/">Html5+css3</a></li>
-        <li><a href="/">百度</a></li>
+        <li><a href="http://www.baidu.com/">百度</a></li>
+        <li><a href="http://code.ziqiangxuetang.com">自强学堂</a></li>
       </ul>
     </div>
   </div>
   <!--r_box end -->
 </article>
 <footer>
-  <p class="ft-copyright">某某某的个人博客 蜀ICP备xxxxxxx号-1</p>
+  <p class="ft-copyright">王世繁的个人博客 蜀ICP备xxxxxxx号-1</p>
   <div id="tbox"> <a id="togbook" href="/"></a> <a id="gotop" href="javascript:void(0)"></a> </div>
 </footer>
 </body>

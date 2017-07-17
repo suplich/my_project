@@ -77,6 +77,13 @@ class Article(models.Model):
         verbose_name_plural = verbose_name
         ordering = ['-date_publish']
 
+     #increas_click_count 方法首先将自身对应的 click_count 字段的值 +1（此时数据库中的值还没变），
+     #然后调用 save 方法将更改后的值保存到数据库。
+     #注意这里使用了 update_fields 参数来告诉 Django 只更新数据库中 click_count 字段的值，以提高效率。
+    def increas_click_count(self):
+        self.click_count+=1
+        self.save(update_fields=['click_count'])
+
     def __unicode__(self):
         return self.title
 

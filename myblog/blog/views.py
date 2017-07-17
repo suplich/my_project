@@ -19,29 +19,37 @@ def global_setting(request):
     SITE_NAME = settings.SITE_NAME
     SITE_DESC = settings.SITE_DESC
     # 分类信息获取（导航数据）
+    # 为什么只取了前7个
     category_list = Category.objects.all()[:6]
+    
     # 文章归档数据
     archive_list = Article.objects.distinct_date()
-    # 广告数据（同学们自己完成）
-    # 标签云数据（同学们自己完成）
-    # 友情链接数据（同学们自己完成）
-    # 文章排行榜数据（按浏览量和站长推荐的功能同学们自己完成）
+    
+    # 广告数据
+    # 标签云数据
+    tag_list=Tag.objects.all()
+    # 友情链接数据
+    
+    # 文章排行榜数据
+    click_count_paixu=Article.objects.all().order_by('-click_count')[:5]
+
     # 评论排行
     comment_count_list = Comment.objects.values('article').annotate(comment_count=Count('article')).order_by('-comment_count')
-    article_comment_list = [Article.objects.get(pk=comment['article']) for comment in comment_count_list]
+    
+    article_comment_list = [Article.objects.get(pk=comment['article']) for comment in comment_count_list][:5]
+
     return locals()
 	
 	
 def index(request):
-	article_list = Article.objects.all()
-	article_list = getPage(request, article_list)
-
+	article_list_paixing = Article.objects.all()
+	article_list = getPage(request, article_list_paixing)
 	return render(request, 'index.html', locals())
 
 	
 # 分页代码
 def getPage(request, article_list):
-    paginator = Paginator(article_list, 2)
+    paginator = Paginator(article_list, 3)
     try:
         page = request.GET.get('page')
         article_list = paginator.page(page)
@@ -52,6 +60,7 @@ def getPage(request, article_list):
 	
 # 文章归类
 def archive(request):
+	print request
         # 先获取客户端提交的信息
 	year = request.GET.get('year', None)
 	month = request.GET.get('month', None)
@@ -65,10 +74,12 @@ def article(request):
 
         # 获取文章id
         id = request.GET.get('id', None)
+        
         try:
             # 获取文章信息
             article = Article.objects.get(pk=id)
-
+           
+            article.increas_click_count()
         except Article.DoesNotExist:
             return render(request, 'failure.html', {'reason': '没有找到对应的文章'})
 
@@ -181,9 +192,12 @@ def do_login(request):
     return render(request, 'login.html', locals())
 
 def category(request):
+    print request
     try:
         # 先获取客户端提交的信息
         cid = request.GET.get('cid', None)
+
+        
         try:
             category = Category.objects.get(pk=cid)
         except Category.DoesNotExist:
@@ -192,4 +206,32 @@ def category(request):
         article_list = getPage(request, article_list)
     except Exception as e:
         logger.error(e)
-    return render(request, 'category.html', locals())	
+    return render(request, 'category.html', locals())
+	
+	
+	
+def cloude(request):
+	try:
+		tid=request.GET.get('tid',None)
+		
+		try:
+			tag=Tag.objects.get(pk=tid)
+		except Tag.DoesNotExist:
+			return render(request, 'failure.html', {'reason': '标签不存在'})
+		article_list = Article.objects.filter(tag=tag)
+		article_list = getPage(request, article_list)
+	except Exception as e:
+		logger.error(e)
+	return render(request, 'cloude.html', locals())
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+	
+	
